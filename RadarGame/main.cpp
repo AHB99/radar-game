@@ -10,7 +10,6 @@ using std::endl;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-
 bool initializeSDL(SDL_Window* mainWindow,SDL_Renderer* mainRenderer);
 void closeAllSystems(SDL_Window* mainWindow, SDL_Renderer* mainRenderer);
 
@@ -36,8 +35,7 @@ int main(int argc, char* args[])
 
 			//Event handler
 			SDL_Event e;
-
-			
+		
 			while (!quit)
 			{
 				//Event queue
@@ -51,18 +49,15 @@ int main(int argc, char* args[])
 				
 				}
 
-
 				//Clear screen
 				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(mainRenderer);
 
-				//Update screen
 				SDL_RenderPresent(mainRenderer);
 			}
 		}
 	}
 
-	//Free resources and close SDL
 	closeAllSystems(mainWindow,mainRenderer);
 
 	return 0;
