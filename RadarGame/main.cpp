@@ -2,6 +2,7 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <string>
+#include "RTexture.h"
 
 using std::cout;
 using std::cin;
@@ -10,13 +11,15 @@ using std::endl;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-bool initializeSDL(SDL_Window* mainWindow,SDL_Renderer* mainRenderer);
-void closeAllSystems(SDL_Window* mainWindow, SDL_Renderer* mainRenderer);
+bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
+void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer);
 
 int main(int argc, char* args[])
 {
 	SDL_Window* mainWindow = nullptr;
 	SDL_Renderer* mainRenderer = nullptr;
+
+	RTexture playerTexture;
 
 	if (!initializeSDL(mainWindow,mainRenderer))
 	{
@@ -25,9 +28,12 @@ int main(int argc, char* args[])
 	else
 	{
 		//TODO: media loading
+		//if (!playerTexture.loadImageFromFile("testPlayer.png", mainRenderer))
+		playerTexture.loadImageFromFile("testPlayer.png", mainRenderer);
 		if (false)
 		{
-		}
+			cout << "Error: " << SDL_GetError();
+		}	
 		else
 		{
 			//Main loop flag
@@ -44,14 +50,14 @@ int main(int argc, char* args[])
 					if (e.type == SDL_QUIT)
 					{
 						quit = true;
-					}
-
-				
+					}		
 				}
 
 				//Clear screen
 				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(mainRenderer);
+
+				playerTexture.renderCurrentTexture(0, 0, mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
 			}
@@ -63,7 +69,7 @@ int main(int argc, char* args[])
 	return 0;
 }
 
-bool initializeSDL(SDL_Window* mainWindow, SDL_Renderer* mainRenderer)
+bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
 {
 	bool initialized = true;
 
@@ -110,7 +116,7 @@ bool initializeSDL(SDL_Window* mainWindow, SDL_Renderer* mainRenderer)
 	return initialized;
 }
 
-void closeAllSystems(SDL_Window* mainWindow, SDL_Renderer* mainRenderer) {
+void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer) {
 
 	SDL_DestroyRenderer(mainRenderer);
 	SDL_DestroyWindow(mainWindow);

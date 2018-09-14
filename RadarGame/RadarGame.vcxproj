@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RTexture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RTexture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{986c5ef5-3283-4bb1-aa34-a9fcd92a9dfe}</ProjectGuid>
