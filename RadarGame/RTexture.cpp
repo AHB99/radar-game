@@ -52,3 +52,6 @@ bool RTexture::renderCurrentTexture(int x, int y, SDL_Renderer*& destinationRend
 	return (!SDL_RenderCopy(destinationRenderer, rTexture,NULL,&destinationRect));
 }
 
+
+
+

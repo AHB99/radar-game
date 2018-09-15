@@ -14,6 +14,7 @@ public:
 	bool loadImageFromFile(std::string fileName, SDL_Renderer*& destinationRenderer);
 	bool renderCurrentTexture(int x, int y, SDL_Renderer*& destinationRenderer);
 
+
 	void deallocateTexture();
 
 

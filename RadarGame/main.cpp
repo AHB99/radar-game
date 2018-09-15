@@ -2,6 +2,7 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "RTexture.h"
 #include "rconfigurations.h"
 #include "Player.h"
@@ -12,14 +13,14 @@ using std::endl;
 
 
 bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
-void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer);
+void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
 
 int main(int argc, char* args[])
 {
 	SDL_Window* mainWindow = nullptr;
 	SDL_Renderer* mainRenderer = nullptr;
 
-	Player mainPlayer;
+	std::vector<RTexture> allSprites(3);
 
 	if (!initializeSDL(mainWindow,mainRenderer))
 	{
@@ -27,17 +28,22 @@ int main(int argc, char* args[])
 	}
 	else
 	{
-		if (!mainPlayer.loadSpriteFromFile("testPlayer.png", mainRenderer))
+		RTexture tempPlayerSprite;
+		if (!tempPlayerSprite.loadImageFromFile("testPlayer.png", mainRenderer))
 		{
 			cout << "Error: " << SDL_GetError();
 		}	
 		else
 		{
+			allSprites[rconfigurations::PLAYER_SPRITE] = tempPlayerSprite;
 			//Main loop flag
 			bool quit = false;
 
 			//Event handler
 			SDL_Event e;
+
+			//Main Player
+			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
 		
 			while (!quit)
 			{
@@ -67,7 +73,7 @@ int main(int argc, char* args[])
 		}
 	}
 
-	closeAllSystems(mainWindow,mainRenderer);
+	closeAllSystems(mainWindow,mainRenderer, allSprites);
 
 	return 0;
 }
@@ -119,7 +125,11 @@ bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
 	return initialized;
 }
 
-void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer) {
+void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites) {
+
+	for (auto texture : allSprites) {
+		texture.deallocateTexture();
+	}
 
 	SDL_DestroyRenderer(mainRenderer);
 	SDL_DestroyWindow(mainWindow);

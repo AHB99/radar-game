@@ -1,8 +1,9 @@
 #include "Player.h"
 
-bool Player::loadSpriteFromFile(std::string fileName, SDL_Renderer*& destinationRenderer) {
-	return playerTexture.loadImageFromFile(fileName, destinationRenderer);
-}
+Player::Player(RTexture* playerTexture, int xPos, int yPos) :
+	playerTexture(playerTexture), xPos(xPos), yPos(yPos) { }
+
+
 
 
 void Player::moveUsingVelocity() {
@@ -51,5 +52,5 @@ void Player::changeVelocityFromKeys(SDL_Event& e) {
 }
 
 bool Player::renderToScreen(SDL_Renderer*& destinationRenderer) {
-	return playerTexture.renderCurrentTexture(xPos, yPos, destinationRenderer);
+	return playerTexture->renderCurrentTexture(xPos, yPos, destinationRenderer);
 }
