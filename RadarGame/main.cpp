@@ -3,13 +3,13 @@
 #include <iostream>
 #include <string>
 #include "RTexture.h"
+#include "rconfigurations.h"
+#include "Player.h"
 
 using std::cout;
 using std::cin;
 using std::endl;
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
 
 bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer);
@@ -19,7 +19,7 @@ int main(int argc, char* args[])
 	SDL_Window* mainWindow = nullptr;
 	SDL_Renderer* mainRenderer = nullptr;
 
-	RTexture playerTexture;
+	Player mainPlayer;
 
 	if (!initializeSDL(mainWindow,mainRenderer))
 	{
@@ -27,10 +27,7 @@ int main(int argc, char* args[])
 	}
 	else
 	{
-		//TODO: media loading
-		//if (!playerTexture.loadImageFromFile("testPlayer.png", mainRenderer))
-		playerTexture.loadImageFromFile("testPlayer.png", mainRenderer);
-		if (false)
+		if (!mainPlayer.loadSpriteFromFile("testPlayer.png", mainRenderer))
 		{
 			cout << "Error: " << SDL_GetError();
 		}	
@@ -50,14 +47,20 @@ int main(int argc, char* args[])
 					if (e.type == SDL_QUIT)
 					{
 						quit = true;
-					}		
+					}	
+
+					//Player key motions
+					mainPlayer.changeVelocityFromKeys(e);
 				}
+				//Reflect changes to player position
+				mainPlayer.moveUsingVelocity();
+
 
 				//Clear screen
 				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(mainRenderer);
 
-				playerTexture.renderCurrentTexture(0, 0, mainRenderer);
+				mainPlayer.renderToScreen(mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
 			}
@@ -85,7 +88,7 @@ bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
 			cout << "Linear texture filtering failed" << endl;
 		}
 
-		mainWindow = SDL_CreateWindow("Radar Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		mainWindow = SDL_CreateWindow("Radar Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, rconfigurations::SCREEN_WIDTH, rconfigurations::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (mainWindow == nullptr)
 		{
 			cout << "Window creation failed. Errors:\n" << SDL_GetError << endl;
