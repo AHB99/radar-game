@@ -6,9 +6,10 @@
 #include <string>
 #include <iostream>
 #include "RTexture.h"
+#include "GameObject.h"
 #include "rconfigurations.h"
 
-class Player {
+class Player : public GameObject {
 public:
 
 	Player() = default;
@@ -26,15 +27,10 @@ public:
 
 	void changeVelocityFromKeys(SDL_Event& e);
 
-	bool renderToScreen(SDL_Renderer*& destinationRenderer);
 	
 
 private:
 	
-	RTexture* playerTexture;
-
-	int xPos = 0;
-	int yPos = 0;
 
 	int xVel = 0;
 	int yVel = 0;

@@ -1,9 +1,7 @@
 #include "Player.h"
 
 Player::Player(RTexture* playerTexture, int xPos, int yPos) :
-	playerTexture(playerTexture), xPos(xPos), yPos(yPos) { }
-
-
+	GameObject(playerTexture,xPos,yPos) { }
 
 
 void Player::moveUsingVelocity() {
@@ -49,8 +47,4 @@ void Player::changeVelocityFromKeys(SDL_Event& e) {
 		}
 	}
 
-}
-
-bool Player::renderToScreen(SDL_Renderer*& destinationRenderer) {
-	return playerTexture->renderCurrentTexture(xPos, yPos, destinationRenderer);
 }

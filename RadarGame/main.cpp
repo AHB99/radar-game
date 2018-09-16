@@ -13,6 +13,7 @@ using std::endl;
 
 
 bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
+bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer);
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
 
 int main(int argc, char* args[])
@@ -28,14 +29,12 @@ int main(int argc, char* args[])
 	}
 	else
 	{
-		RTexture tempPlayerSprite;
-		if (!tempPlayerSprite.loadImageFromFile("testPlayer.png", mainRenderer))
+		if (!loadSprites(allSprites,mainRenderer))
 		{
 			cout << "Error: " << SDL_GetError();
 		}	
 		else
 		{
-			allSprites[rconfigurations::PLAYER_SPRITE] = tempPlayerSprite;
 			//Main loop flag
 			bool quit = false;
 
@@ -124,6 +123,13 @@ bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
 
 	return initialized;
 }
+
+bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer) {
+	bool noErrors = false;
+	noErrors =  allSprites[rconfigurations::PLAYER_SPRITE].loadImageFromFile(rconfigurations::PLAYER_IMAGE_FILE, mainRenderer);
+	return noErrors;
+}
+
 
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites) {
 
