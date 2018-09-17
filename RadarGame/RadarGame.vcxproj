@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Coin.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Coin.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="rconfigurations.h" />
     <ClInclude Include="Player.h" />

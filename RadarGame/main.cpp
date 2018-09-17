@@ -6,6 +6,7 @@
 #include "RTexture.h"
 #include "rconfigurations.h"
 #include "Player.h"
+#include "Coin.h"
 
 using std::cout;
 using std::cin;
@@ -43,6 +44,7 @@ int main(int argc, char* args[])
 
 			//Main Player
 			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
+			Coin testCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
 		
 			while (!quit)
 			{
@@ -66,6 +68,7 @@ int main(int argc, char* args[])
 				SDL_RenderClear(mainRenderer);
 
 				mainPlayer.renderToScreen(mainRenderer);
+				testCoin.renderToScreen(mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
 			}
@@ -126,7 +129,10 @@ bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
 
 bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer) {
 	bool noErrors = false;
+
 	noErrors =  allSprites[rconfigurations::PLAYER_SPRITE].loadImageFromFile(rconfigurations::PLAYER_IMAGE_FILE, mainRenderer);
+	noErrors = allSprites[rconfigurations::COIN_SPRITE].loadImageFromFile(rconfigurations::COIN_IMAGE_FILE, mainRenderer);
+
 	return noErrors;
 }
 
