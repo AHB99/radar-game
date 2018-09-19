@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <cmath>
 #include "RTexture.h"
 
 class GameObject {
@@ -13,8 +14,13 @@ public:
 	
 	bool renderToScreen(SDL_Renderer*& destinationRenderer);
 
-
 	virtual ~GameObject() = default;
+
+	int getWidth();
+	int getHeight();
+
+	int getXPos();
+	int getYPos();
 
 protected:
 	RTexture* gameObjectTexture = nullptr;
@@ -22,5 +28,7 @@ protected:
 	int xPos = 0;
 	int yPos = 0;
 };
+
+bool isCollidingCircular(GameObject* lhs, GameObject* rhs);
 
 #endif

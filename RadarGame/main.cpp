@@ -60,9 +60,8 @@ int main(int argc, char* args[])
 					mainPlayer.changeVelocityFromKeys(e);
 				}
 				//Reflect changes to player position
-				mainPlayer.moveUsingVelocity();
 
-
+				
 				//Clear screen
 				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(mainRenderer);

@@ -17,6 +17,8 @@ public:
 
 	void deallocateTexture();
 
+	int getWidth();
+	int getHeight();
 
 private:
 
