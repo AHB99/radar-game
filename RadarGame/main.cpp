@@ -16,6 +16,7 @@ using std::endl;
 bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
 bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer);
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
+void handleCollisions(Player* mainPlayer, Coin* mainCoin);
 
 int main(int argc, char* args[])
 {
@@ -44,7 +45,7 @@ int main(int argc, char* args[])
 
 			//Main Player
 			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
-			Coin testCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
+			Coin mainCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
 		
 			while (!quit)
 			{
@@ -60,14 +61,15 @@ int main(int argc, char* args[])
 					mainPlayer.changeVelocityFromKeys(e);
 				}
 				//Reflect changes to player position
-
+				mainPlayer.moveUsingVelocity();
+				handleCollisions(&mainPlayer, &mainCoin);
 				
 				//Clear screen
 				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(mainRenderer);
 
 				mainPlayer.renderToScreen(mainRenderer);
-				testCoin.renderToScreen(mainRenderer);
+				mainCoin.renderToScreen(mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
 			}
@@ -131,6 +133,8 @@ bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer)
 
 	noErrors =  allSprites[rconfigurations::PLAYER_SPRITE].loadImageFromFile(rconfigurations::PLAYER_IMAGE_FILE, mainRenderer);
 	noErrors = allSprites[rconfigurations::COIN_SPRITE].loadImageFromFile(rconfigurations::COIN_IMAGE_FILE, mainRenderer);
+	noErrors = allSprites[rconfigurations::ENEMY_SPRITE].loadImageFromFile(rconfigurations::ENEMY_IMAGE_FILE, mainRenderer);
+
 
 	return noErrors;
 }
@@ -149,4 +153,17 @@ void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::
 
 	IMG_Quit();
 	SDL_Quit();
+}
+
+void handleCollisions(Player* mainPlayer, Coin* mainCoin) {
+	if (isCollidingCircular(mainPlayer, mainCoin)) {
+		//test teleportation for now
+		if (mainCoin->getXPos() == rconfigurations::SCREEN_WIDTH / 2) {
+			mainCoin->moveCoin(rconfigurations::SCREEN_WIDTH / 3, mainCoin->getYPos());
+		}
+		else {
+			mainCoin->moveCoin(rconfigurations::SCREEN_WIDTH / 2, mainCoin->getYPos());
+
+		}
+	}
 }

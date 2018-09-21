@@ -10,7 +10,7 @@ public:
 	Coin() = default;
 	Coin(RTexture* gameObjectTexture, int xPos = 0, int yPos = 0);
 
-
+	void moveCoin(int newXPosition, int newYPosition);
 
 };
 

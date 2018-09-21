@@ -7,14 +7,14 @@ Player::Player(RTexture* playerTexture, int xPos, int yPos) :
 void Player::moveUsingVelocity() {
 	xPos += xVel;
 
-	if ((xPos < 0) || (xPos + PLAYER_WIDTH > rconfigurations::SCREEN_WIDTH))
+	if ((xPos < 0) || (xPos + gameObjectTexture->getWidth() > rconfigurations::SCREEN_WIDTH))
 	{
 		xPos -= xVel;
 	}
 
 	yPos += yVel;
 
-	if ((yPos < 0) || (yPos + PLAYER_HEIGHT > rconfigurations::SCREEN_HEIGHT))
+	if ((yPos < 0) || (yPos + gameObjectTexture->getHeight() > rconfigurations::SCREEN_HEIGHT))
 	{
 		yPos -= yVel;
 	}
