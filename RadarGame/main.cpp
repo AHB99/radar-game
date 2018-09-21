@@ -7,6 +7,7 @@
 #include "rconfigurations.h"
 #include "Player.h"
 #include "Coin.h"
+#include "Enemy.h"
 
 using std::cout;
 using std::cin;
@@ -46,7 +47,8 @@ int main(int argc, char* args[])
 			//Main Player
 			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
 			Coin mainCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
-		
+			Enemy testEnemy(&allSprites[rconfigurations::ENEMY_SPRITE], true, true);
+
 			while (!quit)
 			{
 				//Event queue
@@ -62,6 +64,9 @@ int main(int argc, char* args[])
 				}
 				//Reflect changes to player position
 				mainPlayer.moveUsingVelocity();
+
+				testEnemy.moveToRoam();
+
 				handleCollisions(&mainPlayer, &mainCoin);
 				
 				//Clear screen
@@ -70,6 +75,7 @@ int main(int argc, char* args[])
 
 				mainPlayer.renderToScreen(mainRenderer);
 				mainCoin.renderToScreen(mainRenderer);
+				testEnemy.renderToScreen(mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
 			}
