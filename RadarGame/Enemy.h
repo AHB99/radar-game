@@ -9,7 +9,7 @@ class RTexture;
 class Enemy : public GameObject {
 public:
 	Enemy() = default;
-	Enemy(RTexture* enemyTexture, bool verticalOrientation, bool positiveDirection);
+	Enemy(RTexture* enemyTexture, bool verticalOrientation);
 
 	void moveToRoam();
 
@@ -18,7 +18,6 @@ private:
 	int velocity;
 
 	bool verticalOrientation;
-	bool positiveDirection;
 
 };
 
