@@ -47,7 +47,7 @@ int main(int argc, char* args[])
 			//Main Player
 			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
 			Coin mainCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
-			Enemy testEnemy(&allSprites[rconfigurations::ENEMY_SPRITE], true, true);
+			Enemy testEnemy(&allSprites[rconfigurations::ENEMY_SPRITE], true);
 
 			while (!quit)
 			{
