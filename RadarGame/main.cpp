@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Coin.h"
 #include "Enemy.h"
+#include "EnemyBelt.h"
 
 using std::cout;
 using std::cin;
@@ -18,6 +19,10 @@ bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
 bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer);
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
 void handleCollisions(Player* mainPlayer, Coin* mainCoin);
+std::vector<EnemyBelt> setUpEnemyBelts();
+void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites);
+void moveAllEnemies(std::vector<Enemy>& mainEnemyVector);
+void renderAllEnemies(std::vector<Enemy>& mainEnemyVector, SDL_Renderer*& destinationRenderer);
 
 int main(int argc, char* args[])
 {
@@ -44,10 +49,12 @@ int main(int argc, char* args[])
 			//Event handler
 			SDL_Event e;
 
-			//Main Player
+			//Main Objects Initialization
 			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
 			Coin mainCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
-			Enemy testEnemy(&allSprites[rconfigurations::ENEMY_SPRITE], true);
+			std::vector<EnemyBelt> mainEnemyBelts = setUpEnemyBelts();
+			std::vector<Enemy> mainEnemyVector;
+			setUpEnemies(mainEnemyVector, mainEnemyBelts, allSprites);
 
 			while (!quit)
 			{
@@ -65,7 +72,7 @@ int main(int argc, char* args[])
 				//Reflect changes to player position
 				mainPlayer.moveUsingVelocity();
 
-				testEnemy.moveToRoam();
+				moveAllEnemies(mainEnemyVector);
 
 				handleCollisions(&mainPlayer, &mainCoin);
 				
@@ -75,8 +82,7 @@ int main(int argc, char* args[])
 
 				mainPlayer.renderToScreen(mainRenderer);
 				mainCoin.renderToScreen(mainRenderer);
-				testEnemy.renderToScreen(mainRenderer);
-
+				renderAllEnemies(mainEnemyVector,mainRenderer);
 				SDL_RenderPresent(mainRenderer);
 			}
 		}
@@ -173,3 +179,32 @@ void handleCollisions(Player* mainPlayer, Coin* mainCoin) {
 		}
 	}
 }
+
+std::vector<EnemyBelt> setUpEnemyBelts() {
+	//Will randomize later
+	//Will make it 3 vert 2 hori later
+	std::vector<EnemyBelt> result;
+	result.push_back(EnemyBelt(true, rconfigurations::SCREEN_WIDTH / 3));
+	result.push_back(EnemyBelt(true, 2*(rconfigurations::SCREEN_WIDTH / 3)));
+	result.push_back(EnemyBelt(false, (rconfigurations::SCREEN_WIDTH / 2)));
+	return result;
+}
+
+void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites) {
+	for (auto& enemyBelt : mainEnemyBelts) {
+		mainEnemyVector.push_back(Enemy(&allSprites[rconfigurations::ENEMY_SPRITE], enemyBelt));
+	}
+}
+
+void moveAllEnemies(std::vector<Enemy>& mainEnemyVector) {
+	for (auto& enemy : mainEnemyVector) {
+		enemy.moveToRoam();
+	}
+}
+
+void renderAllEnemies(std::vector<Enemy>& mainEnemyVector, SDL_Renderer*& destinationRenderer) {
+	for (auto& enemy : mainEnemyVector) {
+		enemy.renderToScreen(destinationRenderer);
+	}
+}
+

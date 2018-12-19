@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
-Enemy::Enemy(RTexture* enemyTexture, bool verticalOrientation):
-	GameObject(enemyTexture), enemySpeedDelta(5), velocity(5), verticalOrientation(verticalOrientation) { }
+Enemy::Enemy(RTexture* enemyTexture, bool verticalOrientation, int xPos, int yPos):
+	GameObject(enemyTexture, xPos, yPos), enemySpeedDelta(5), velocity(5), verticalOrientation(verticalOrientation) { }
 
 void Enemy::moveToRoam() {
 	
@@ -32,4 +32,15 @@ void Enemy::moveToRoam() {
 	}
 }
 
+Enemy::Enemy(RTexture* enemyTexture, EnemyBelt& linkedEnemyBelt) : GameObject(enemyTexture), enemySpeedDelta(5), velocity(5), verticalOrientation(linkedEnemyBelt.getOrientation()) {
+	//Alternate Pos will be randomized
+	if (verticalOrientation) {
+		xPos = linkedEnemyBelt.getPosition();
+		yPos = 0;
+	}
+	else {
+		xPos = 0;
+		yPos = linkedEnemyBelt.getPosition();
+	}
+}
 

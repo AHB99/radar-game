@@ -6,7 +6,8 @@ public:
 	EnemyBelt() = default;
 	//Get width from enemy sprite texture when loading
 	EnemyBelt(bool verticalOrientation, int position = 0);
-
+	bool getOrientation() const;
+	int getPosition() const;
 
 
 private:
