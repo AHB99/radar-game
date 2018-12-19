@@ -9,6 +9,7 @@
 #include "Coin.h"
 #include "Enemy.h"
 #include "EnemyBelt.h"
+#include "Radar.h"
 
 using std::cout;
 using std::cin;
@@ -52,12 +53,20 @@ int main(int argc, char* args[])
 			//Main Objects Initialization
 			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
 			Coin mainCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
+			Radar mainRadar(&allSprites[rconfigurations::RADAR_SPRITE]);
+
 			std::vector<EnemyBelt> mainEnemyBelts;
 			setUpEnemyBelts(mainEnemyBelts);
+			
 			std::vector<Enemy> mainEnemyVector;
 			setUpEnemies(mainEnemyVector, mainEnemyBelts, allSprites);
-			
 
+			//DEBUG RADAR
+			int x = 100;
+			int y = 255;
+			//END DEBUG RADAR
+
+			//Game Loop
 			while (!quit)
 			{
 				//Event queue
@@ -86,7 +95,25 @@ int main(int argc, char* args[])
 				mainCoin.renderToScreen(mainRenderer);
 				renderAllEnemies(mainEnemyVector,mainRenderer);
 
+				//DEBUG RADAR
+				if (x < 50) {
+					y -= 2;
+				}
+				else {
+					y = 255;
+				}
+				mainRadar.setAlpha(y);
+				mainRadar.renderToScreen(mainRenderer);
+				x--;
+				if (x < 0) {
+					x = 300;
+				}
+				//END DEBUG RADAR
+
 				SDL_RenderPresent(mainRenderer);
+
+				
+
 			}
 		}
 	}

@@ -25,6 +25,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Radar.cpp" />
     <ClCompile Include="RTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +33,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBelt.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Radar.h" />
     <ClInclude Include="rconfigurations.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RTexture.h" />
