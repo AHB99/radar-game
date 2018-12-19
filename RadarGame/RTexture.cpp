@@ -52,11 +52,31 @@ bool RTexture::renderCurrentTexture(int x, int y, SDL_Renderer*& destinationRend
 	return (!SDL_RenderCopy(destinationRenderer, rTexture,NULL,&destinationRect));
 }
 
+bool RTexture::renderCurrentTextureToFullScreen(int x, int y, SDL_Renderer*& destinationRenderer) {
+
+	return (!SDL_RenderCopy(destinationRenderer, rTexture, NULL, NULL));
+}
+
+
 int RTexture::getWidth() {
 	return rWidth;
 }
 int RTexture::getHeight() {
 	return rHeight;
 }
+
+
+
+
+void RTexture::setAlpha(Uint8 alpha)
+{
+	SDL_SetTextureAlphaMod(rTexture, alpha);
+}
+
+void RTexture::setBlendMode() {
+	SDL_SetTextureBlendMode(rTexture, SDL_BLENDMODE_BLEND);
+}
+
+
 
 

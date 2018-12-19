@@ -19,7 +19,7 @@ bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
 bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer);
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
 void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector);
-std::vector<EnemyBelt> setUpEnemyBelts();
+void setUpEnemyBelts(std::vector<EnemyBelt>& mainEnemyBelts);
 void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites);
 void moveAllEnemies(std::vector<Enemy>& mainEnemyVector);
 void renderAllEnemies(std::vector<Enemy>& mainEnemyVector, SDL_Renderer*& destinationRenderer);
@@ -29,7 +29,7 @@ int main(int argc, char* args[])
 	SDL_Window* mainWindow = nullptr;
 	SDL_Renderer* mainRenderer = nullptr;
 
-	std::vector<RTexture> allSprites(3);
+	std::vector<RTexture> allSprites(4);
 
 	if (!initializeSDL(mainWindow,mainRenderer))
 	{
@@ -52,9 +52,11 @@ int main(int argc, char* args[])
 			//Main Objects Initialization
 			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
 			Coin mainCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
-			std::vector<EnemyBelt> mainEnemyBelts = setUpEnemyBelts();
+			std::vector<EnemyBelt> mainEnemyBelts;
+			setUpEnemyBelts(mainEnemyBelts);
 			std::vector<Enemy> mainEnemyVector;
 			setUpEnemies(mainEnemyVector, mainEnemyBelts, allSprites);
+			
 
 			while (!quit)
 			{
@@ -83,6 +85,7 @@ int main(int argc, char* args[])
 				mainPlayer.renderToScreen(mainRenderer);
 				mainCoin.renderToScreen(mainRenderer);
 				renderAllEnemies(mainEnemyVector,mainRenderer);
+
 				SDL_RenderPresent(mainRenderer);
 			}
 		}
@@ -146,6 +149,7 @@ bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer)
 	noErrors =  allSprites[rconfigurations::PLAYER_SPRITE].loadImageFromFile(rconfigurations::PLAYER_IMAGE_FILE, mainRenderer);
 	noErrors = allSprites[rconfigurations::COIN_SPRITE].loadImageFromFile(rconfigurations::COIN_IMAGE_FILE, mainRenderer);
 	noErrors = allSprites[rconfigurations::ENEMY_SPRITE].loadImageFromFile(rconfigurations::ENEMY_IMAGE_FILE, mainRenderer);
+	noErrors = allSprites[rconfigurations::RADAR_SPRITE].loadImageFromFile(rconfigurations::RADAR_IMAGE_FILE, mainRenderer);
 
 
 	return noErrors;
@@ -185,14 +189,12 @@ void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& ma
 	}
 }
 
-std::vector<EnemyBelt> setUpEnemyBelts() {
+void setUpEnemyBelts(std::vector<EnemyBelt>& mainEnemyBelts) {
 	//Will randomize later
 	//Will make it 3 vert 2 hori later
-	std::vector<EnemyBelt> result;
-	result.push_back(EnemyBelt(true, rconfigurations::SCREEN_WIDTH / 3));
-	result.push_back(EnemyBelt(true, 2*(rconfigurations::SCREEN_WIDTH / 3)));
-	result.push_back(EnemyBelt(false, (rconfigurations::SCREEN_WIDTH / 2)));
-	return result;
+	mainEnemyBelts.push_back(EnemyBelt(true, rconfigurations::SCREEN_WIDTH / 3));
+	mainEnemyBelts.push_back(EnemyBelt(true, 2*(rconfigurations::SCREEN_WIDTH / 3)));
+	mainEnemyBelts.push_back(EnemyBelt(false, (rconfigurations::SCREEN_WIDTH / 2)));
 }
 
 void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites) {
