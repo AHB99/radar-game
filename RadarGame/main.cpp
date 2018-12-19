@@ -18,7 +18,7 @@ using std::endl;
 bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
 bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer);
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
-void handleCollisions(Player* mainPlayer, Coin* mainCoin);
+void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector);
 std::vector<EnemyBelt> setUpEnemyBelts();
 void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites);
 void moveAllEnemies(std::vector<Enemy>& mainEnemyVector);
@@ -74,7 +74,7 @@ int main(int argc, char* args[])
 
 				moveAllEnemies(mainEnemyVector);
 
-				handleCollisions(&mainPlayer, &mainCoin);
+				handleCollisions(mainPlayer, mainCoin, mainEnemyVector);
 				
 				//Clear screen
 				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -167,15 +167,20 @@ void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::
 	SDL_Quit();
 }
 
-void handleCollisions(Player* mainPlayer, Coin* mainCoin) {
+void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector) {
 	if (isCollidingCircular(mainPlayer, mainCoin)) {
 		//test teleportation for now
-		if (mainCoin->getXPos() == rconfigurations::SCREEN_WIDTH / 2) {
-			mainCoin->moveCoin(rconfigurations::SCREEN_WIDTH / 3, mainCoin->getYPos());
+		if (mainCoin.getXPos() == rconfigurations::SCREEN_WIDTH / 2) {
+			mainCoin.moveCoin(rconfigurations::SCREEN_WIDTH / 3, mainCoin.getYPos());
 		}
 		else {
-			mainCoin->moveCoin(rconfigurations::SCREEN_WIDTH / 2, mainCoin->getYPos());
+			mainCoin.moveCoin(rconfigurations::SCREEN_WIDTH / 2, mainCoin.getYPos());
 
+		}
+	}
+	for (auto& enemy : mainEnemyVector) {
+		if (isCollidingCircular(mainPlayer,enemy)) {
+			cout << "Hit" << endl;
 		}
 	}
 }

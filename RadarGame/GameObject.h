@@ -29,6 +29,6 @@ protected:
 	int yPos = 0;
 };
 
-bool isCollidingCircular(GameObject* lhs, GameObject* rhs);
+bool isCollidingCircular(GameObject& lhs, GameObject& rhs);
 
 #endif

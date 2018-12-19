@@ -21,14 +21,14 @@ int GameObject::getYPos() {
 	return yPos;
 }
 
-bool isCollidingCircular(GameObject* lhs, GameObject* rhs) {
-	double lhsRadius = lhs->getWidth() / 2.0;
-	double rhsRadius = rhs->getWidth() / 2.0;
+bool isCollidingCircular(GameObject& lhs, GameObject& rhs) {
+	double lhsRadius = lhs.getWidth() / 2.0;
+	double rhsRadius = rhs.getWidth() / 2.0;
 
-	double lhsCenterXPos = lhs->getXPos() + lhsRadius;
-	double lhsCenterYPos = lhs->getYPos() + lhsRadius;
-	double rhsCenterXPos = rhs->getXPos() + rhsRadius;
-	double rhsCenterYPos = rhs->getYPos() + rhsRadius;
+	double lhsCenterXPos = lhs.getXPos() + lhsRadius;
+	double lhsCenterYPos = lhs.getYPos() + lhsRadius;
+	double rhsCenterXPos = rhs.getXPos() + rhsRadius;
+	double rhsCenterYPos = rhs.getYPos() + rhsRadius;
 
 	double distanceBetweenCentersSquared = pow((lhsCenterXPos - rhsCenterXPos), 2) + pow((lhsCenterYPos - rhsCenterYPos), 2);
 
