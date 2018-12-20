@@ -61,10 +61,6 @@ int main(int argc, char* args[])
 			std::vector<Enemy> mainEnemyVector;
 			setUpEnemies(mainEnemyVector, mainEnemyBelts, allSprites);
 
-			//DEBUG RADAR
-			int x = 100;
-			int y = 255;
-			//END DEBUG RADAR
 
 			//Game Loop
 			while (!quit)
@@ -95,20 +91,14 @@ int main(int argc, char* args[])
 				mainCoin.renderToScreen(mainRenderer);
 				renderAllEnemies(mainEnemyVector,mainRenderer);
 
-				//DEBUG RADAR
-				if (x < 50) {
-					y -= 2;
+				//Will be decided based on Game class later
+				int currentTime = SDL_GetTicks() % 2000;
+
+				if (((currentTime >= 0)&&(currentTime <= 200))&&(!mainRadar.isBlinking())) {
+					mainRadar.startBlink();
 				}
-				else {
-					y = 255;
-				}
-				mainRadar.setAlpha(y);
+				mainRadar.updateBlink();
 				mainRadar.renderToScreen(mainRenderer);
-				x--;
-				if (x < 0) {
-					x = 300;
-				}
-				//END DEBUG RADAR
 
 				SDL_RenderPresent(mainRenderer);
 
