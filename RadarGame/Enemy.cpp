@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
 Enemy::Enemy(RTexture* enemyTexture, bool verticalOrientation, int xPos, int yPos):
-	GameObject(enemyTexture, xPos, yPos), enemySpeedDelta(5), velocity(5), verticalOrientation(verticalOrientation) { }
+	GameObject(enemyTexture, xPos, yPos), enemySpeedDelta(VEL_INIT), velocity(VEL_INIT), verticalOrientation(verticalOrientation) { }
 
 void Enemy::moveToRoam() {
 	
@@ -41,6 +41,20 @@ Enemy::Enemy(RTexture* enemyTexture, EnemyBelt& linkedEnemyBelt) : GameObject(en
 	else {
 		xPos = 0;
 		yPos = linkedEnemyBelt.getPosition();
+	}
+}
+
+void Enemy::accelarate(Uint32 currTime) {
+	if ((currTime > 5000)&&(enemySpeedDelta != VEL_MAX)) {
+		int currentTimeSpeedCalc = log(currTime);
+		enemySpeedDelta += currentTimeSpeedCalc - lastTimeSpeedCalc;
+		// DEBUG 
+		if ((currentTimeSpeedCalc - lastTimeSpeedCalc)>0) {
+			std::cout << "Accelerating" << std::endl;
+		}
+		// END DEBUG
+		lastTimeSpeedCalc = currentTimeSpeedCalc;
+		
 	}
 }
 

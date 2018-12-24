@@ -24,6 +24,7 @@ void setUpEnemyBelts(std::vector<EnemyBelt>& mainEnemyBelts);
 void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites);
 void moveAllEnemies(std::vector<Enemy>& mainEnemyVector);
 void renderAllEnemies(std::vector<Enemy>& mainEnemyVector, SDL_Renderer*& destinationRenderer);
+void accelerateEnemies(std::vector<Enemy>& mainEnemyVector, Uint32 currTime);
 
 int main(int argc, char* args[])
 {
@@ -79,6 +80,7 @@ int main(int argc, char* args[])
 				//Reflect changes to player position
 				mainPlayer.moveUsingVelocity();
 
+				accelerateEnemies(mainEnemyVector, SDL_GetTicks());
 				moveAllEnemies(mainEnemyVector);
 
 				handleCollisions(mainPlayer, mainCoin, mainEnemyVector);
@@ -231,4 +233,11 @@ void renderAllEnemies(std::vector<Enemy>& mainEnemyVector, SDL_Renderer*& destin
 		enemy.renderToScreen(destinationRenderer);
 	}
 }
+
+void accelerateEnemies(std::vector<Enemy>& mainEnemyVector, Uint32 currTime) {
+	for (auto&enemy : mainEnemyVector) {
+		enemy.accelarate(currTime);
+	}
+}
+
 

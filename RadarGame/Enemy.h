@@ -4,6 +4,11 @@
 #include "GameObject.h"
 #include "EnemyBelt.h"
 #include "rconfigurations.h"
+#include <cmath>
+#include <iostream>
+
+const int VEL_INIT = 3;
+const int VEL_MAX = 50;
 
 class RTexture;
 class EnemyBelt;
@@ -15,10 +20,12 @@ public:
 
 
 	void moveToRoam();
+	void accelarate(Uint32 currTime);
 
 private:
 	int enemySpeedDelta;
 	int velocity;
+	int lastTimeSpeedCalc = 8;
 
 	bool verticalOrientation;
 
