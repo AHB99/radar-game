@@ -7,8 +7,8 @@
 #include <cmath>
 #include <iostream>
 
-const int VEL_INIT = 3;
-const int VEL_MAX = 50;
+const int VEL_INIT = 5;
+const int VEL_MAX = 20;
 
 class RTexture;
 class EnemyBelt;

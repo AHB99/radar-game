@@ -19,7 +19,7 @@ using std::endl;
 bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
 bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer);
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
-void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector);
+void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector, int& gamePoints);
 void setUpEnemyBelts(std::vector<EnemyBelt>& mainEnemyBelts);
 void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites);
 void moveAllEnemies(std::vector<Enemy>& mainEnemyVector);
@@ -32,7 +32,6 @@ int main(int argc, char* args[])
 	SDL_Renderer* mainRenderer = nullptr;
 
 	std::vector<RTexture> allSprites(4);
-
 	if (!initializeSDL(mainWindow,mainRenderer))
 	{
 		cout << "Initialization failed" << endl;
@@ -61,7 +60,7 @@ int main(int argc, char* args[])
 			
 			std::vector<Enemy> mainEnemyVector;
 			setUpEnemies(mainEnemyVector, mainEnemyBelts, allSprites);
-
+			int gamePoints = 0;
 
 			//Game Loop
 			while (!quit)
@@ -83,7 +82,7 @@ int main(int argc, char* args[])
 				accelerateEnemies(mainEnemyVector, SDL_GetTicks());
 				moveAllEnemies(mainEnemyVector);
 
-				handleCollisions(mainPlayer, mainCoin, mainEnemyVector);
+				handleCollisions(mainPlayer, mainCoin, mainEnemyVector, gamePoints);
 				
 				//Clear screen
 				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -190,7 +189,7 @@ void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::
 	SDL_Quit();
 }
 
-void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector) {
+void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector, int& gamePoints) {
 	if (isCollidingCircular(mainPlayer, mainCoin)) {
 		//test teleportation for now
 		if (mainCoin.getXPos() == rconfigurations::SCREEN_WIDTH / 2) {
@@ -200,6 +199,11 @@ void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& ma
 			mainCoin.moveCoin(rconfigurations::SCREEN_WIDTH / 2, mainCoin.getYPos());
 
 		}
+		gamePoints++;
+		// DEBUG
+		cout << "Points: " << gamePoints << endl;
+
+		// END DEBUG
 	}
 	for (auto& enemy : mainEnemyVector) {
 		if (isCollidingCircular(mainPlayer,enemy)) {
@@ -213,7 +217,7 @@ void setUpEnemyBelts(std::vector<EnemyBelt>& mainEnemyBelts) {
 	//Will make it 3 vert 2 hori later
 	mainEnemyBelts.push_back(EnemyBelt(true, rconfigurations::SCREEN_WIDTH / 3));
 	mainEnemyBelts.push_back(EnemyBelt(true, 2*(rconfigurations::SCREEN_WIDTH / 3)));
-	mainEnemyBelts.push_back(EnemyBelt(false, (rconfigurations::SCREEN_WIDTH / 2)));
+	mainEnemyBelts.push_back(EnemyBelt(false, (rconfigurations::SCREEN_HEIGHT / 2)));
 }
 
 void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites) {

@@ -5,7 +5,6 @@ Enemy::Enemy(RTexture* enemyTexture, bool verticalOrientation, int xPos, int yPo
 
 void Enemy::moveToRoam() {
 	
-	//Later will have changing velocities here
 	if (velocity > 0) {
 		velocity = enemySpeedDelta;
 	}
@@ -32,7 +31,7 @@ void Enemy::moveToRoam() {
 	}
 }
 
-Enemy::Enemy(RTexture* enemyTexture, EnemyBelt& linkedEnemyBelt) : GameObject(enemyTexture), enemySpeedDelta(5), velocity(5), verticalOrientation(linkedEnemyBelt.getOrientation()) {
+Enemy::Enemy(RTexture* enemyTexture, EnemyBelt& linkedEnemyBelt) : GameObject(enemyTexture), enemySpeedDelta(VEL_INIT), velocity(VEL_INIT), verticalOrientation(linkedEnemyBelt.getOrientation()) {
 	//Alternate Pos will be randomized
 	if (verticalOrientation) {
 		xPos = linkedEnemyBelt.getPosition();
@@ -48,11 +47,6 @@ void Enemy::accelarate(Uint32 currTime) {
 	if ((currTime > 5000)&&(enemySpeedDelta != VEL_MAX)) {
 		int currentTimeSpeedCalc = log(currTime);
 		enemySpeedDelta += currentTimeSpeedCalc - lastTimeSpeedCalc;
-		// DEBUG 
-		if ((currentTimeSpeedCalc - lastTimeSpeedCalc)>0) {
-			std::cout << "Accelerating" << std::endl;
-		}
-		// END DEBUG
 		lastTimeSpeedCalc = currentTimeSpeedCalc;
 		
 	}
