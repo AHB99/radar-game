@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 #include "RTexture.h"
 #include "rconfigurations.h"
 #include "Player.h"
@@ -10,6 +11,8 @@
 #include "Enemy.h"
 #include "EnemyBelt.h"
 #include "Radar.h"
+
+#include "Game.h"
 
 using std::cout;
 using std::cin;
@@ -19,12 +22,6 @@ using std::endl;
 bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
 bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer);
 void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
-void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector, int& gamePoints);
-void setUpEnemyBelts(std::vector<EnemyBelt>& mainEnemyBelts);
-void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites);
-void moveAllEnemies(std::vector<Enemy>& mainEnemyVector);
-void renderAllEnemies(std::vector<Enemy>& mainEnemyVector, SDL_Renderer*& destinationRenderer);
-void accelerateEnemies(std::vector<Enemy>& mainEnemyVector, Uint32 currTime);
 
 int main(int argc, char* args[])
 {
@@ -44,67 +41,47 @@ int main(int argc, char* args[])
 		}	
 		else
 		{
-			//Main loop flag
-			bool quit = false;
+			//Begin game
+			Game mainGame(&allSprites[rconfigurations::PLAYER_SPRITE], &allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH / 2, rconfigurations::SCREEN_HEIGHT / 2, &allSprites[rconfigurations::RADAR_SPRITE]);
 
 			//Event handler
 			SDL_Event e;
 
-			//Main Objects Initialization
-			Player mainPlayer(&allSprites[rconfigurations::PLAYER_SPRITE]);
-			Coin mainCoin(&allSprites[rconfigurations::COIN_SPRITE], rconfigurations::SCREEN_WIDTH/2,rconfigurations::SCREEN_HEIGHT/2);
-			Radar mainRadar(&allSprites[rconfigurations::RADAR_SPRITE]);
-
-			std::vector<EnemyBelt> mainEnemyBelts;
-			setUpEnemyBelts(mainEnemyBelts);
-			
-			std::vector<Enemy> mainEnemyVector;
-			setUpEnemies(mainEnemyVector, mainEnemyBelts, allSprites);
-			int gamePoints = 0;
+			mainGame.setUpEnemyBelts();
+			mainGame.setUpEnemies(allSprites);
 
 			//Game Loop
-			while (!quit)
-			{
+			while (!mainGame.isGameOver()) {
 				//Event queue
 				while (SDL_PollEvent(&e) != 0)
 				{
 					if (e.type == SDL_QUIT)
 					{
-						quit = true;
+						mainGame.setGameOver();
 					}	
 
 					//Player key motions
-					mainPlayer.changeVelocityFromKeys(e);
+					mainGame.changePlayerVelocityByKeys(e);
 				}
 				//Reflect changes to player position
-				mainPlayer.moveUsingVelocity();
+				mainGame.movePlayerUsingVelocity();
 
-				accelerateEnemies(mainEnemyVector, SDL_GetTicks());
-				moveAllEnemies(mainEnemyVector);
+				mainGame.accelerateEnemies(SDL_GetTicks());
+				mainGame.moveAllEnemies();
 
-				handleCollisions(mainPlayer, mainCoin, mainEnemyVector, gamePoints);
+				mainGame.handleCollisions();
 				
 				//Clear screen
 				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(mainRenderer);
 
-				mainPlayer.renderToScreen(mainRenderer);
-				mainCoin.renderToScreen(mainRenderer);
-				renderAllEnemies(mainEnemyVector,mainRenderer);
+				mainGame.renderGameObjects(mainRenderer);
 
 				//Will be decided based on Game class later
-				int currentTime = SDL_GetTicks() % 2000;
-
-				if (((currentTime >= 0)&&(currentTime <= 200))&&(!mainRadar.isBlinking())) {
-					mainRadar.startBlink();
-				}
-				mainRadar.updateBlink();
-				mainRadar.renderToScreen(mainRenderer);
+				mainGame.executeRadar();
+				mainGame.renderRadar(mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
-
-				
-
 			}
 		}
 	}
@@ -188,60 +165,4 @@ void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::
 	IMG_Quit();
 	SDL_Quit();
 }
-
-void handleCollisions(Player& mainPlayer, Coin& mainCoin, std::vector<Enemy>& mainEnemyVector, int& gamePoints) {
-	if (isCollidingCircular(mainPlayer, mainCoin)) {
-		//test teleportation for now
-		if (mainCoin.getXPos() == rconfigurations::SCREEN_WIDTH / 2) {
-			mainCoin.moveCoin(rconfigurations::SCREEN_WIDTH / 3, mainCoin.getYPos());
-		}
-		else {
-			mainCoin.moveCoin(rconfigurations::SCREEN_WIDTH / 2, mainCoin.getYPos());
-
-		}
-		gamePoints++;
-		// DEBUG
-		cout << "Points: " << gamePoints << endl;
-
-		// END DEBUG
-	}
-	for (auto& enemy : mainEnemyVector) {
-		if (isCollidingCircular(mainPlayer,enemy)) {
-			cout << "Hit" << endl;
-		}
-	}
-}
-
-void setUpEnemyBelts(std::vector<EnemyBelt>& mainEnemyBelts) {
-	//Will randomize later
-	//Will make it 3 vert 2 hori later
-	mainEnemyBelts.push_back(EnemyBelt(true, rconfigurations::SCREEN_WIDTH / 3));
-	mainEnemyBelts.push_back(EnemyBelt(true, 2*(rconfigurations::SCREEN_WIDTH / 3)));
-	mainEnemyBelts.push_back(EnemyBelt(false, (rconfigurations::SCREEN_HEIGHT / 2)));
-}
-
-void setUpEnemies(std::vector<Enemy>& mainEnemyVector, std::vector<EnemyBelt>& mainEnemyBelts, std::vector<RTexture>& allSprites) {
-	for (auto& enemyBelt : mainEnemyBelts) {
-		mainEnemyVector.push_back(Enemy(&allSprites[rconfigurations::ENEMY_SPRITE], enemyBelt));
-	}
-}
-
-void moveAllEnemies(std::vector<Enemy>& mainEnemyVector) {
-	for (auto& enemy : mainEnemyVector) {
-		enemy.moveToRoam();
-	}
-}
-
-void renderAllEnemies(std::vector<Enemy>& mainEnemyVector, SDL_Renderer*& destinationRenderer) {
-	for (auto& enemy : mainEnemyVector) {
-		enemy.renderToScreen(destinationRenderer);
-	}
-}
-
-void accelerateEnemies(std::vector<Enemy>& mainEnemyVector, Uint32 currTime) {
-	for (auto&enemy : mainEnemyVector) {
-		enemy.accelarate(currTime);
-	}
-}
-
 
