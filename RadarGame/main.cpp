@@ -71,8 +71,8 @@ int main(int argc, char* args[])
 
 				mainGame.handleCollisions();
 				
-				//Clear screen
-				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				//Clear screen with background color
+				SDL_SetRenderDrawColor(mainRenderer, 0xaa, 0xaa, 0xa0, 0xFF);
 				SDL_RenderClear(mainRenderer);
 
 				mainGame.renderGameObjects(mainRenderer);
