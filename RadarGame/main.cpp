@@ -77,7 +77,7 @@ int main(int argc, char* args[])
 
 				mainGame.renderGameObjects(mainRenderer);
 
-				//Will be decided based on Game class later
+				mainGame.slowDownRadar();
 				mainGame.executeRadar();
 				mainGame.renderRadar(mainRenderer);
 

@@ -49,6 +49,9 @@ void Game::handleCollisions() {
 
 		}
 		gamePoints++;
+		//Coin collection speeds up the radar (to a limit)
+		speedUpRadar();
+
 		// DEBUG
 		std::cout << "Points: " << gamePoints << std::endl;
 
@@ -76,11 +79,31 @@ void Game::renderRadar(SDL_Renderer*& destinationRenderer) {
 }
 
 void Game::executeRadar() {
-	//2000-> radar speed, will decide later.
-	int currentTime = SDL_GetTicks() % 2000;
+
+	int currentTime = SDL_GetTicks() % radarSpeed;
 	if (((currentTime >= 0) && (currentTime <= 200)) && (!gameRadar.isBlinking())) {
 		gameRadar.startBlink();
 	}
 	gameRadar.updateBlink();
+}
+
+void Game::slowDownRadar() {
+	Uint32 currentTime = SDL_GetTicks();
+	//If the time elapsed since last slowDown update is more than the fixed RadarSpeedTimer value, and the radar speed is less than the fixed MaximumRadarSpeed, slow down the radar
+	if (((currentTime-slowDownRadarLastTime) > RADAR_SPEED_TIMER) && (radarSpeed < MAX_RADAR_SPEED)) {
+		radarSpeed += RADAR_SPEED_DELTA;
+		slowDownRadarLastTime = currentTime;
+	}
+}
+
+void Game::speedUpRadar() {
+	int newRadarSpeed = radarSpeed - RADAR_SPEED_DELTA;
+	//Only reduce delay if above fixed MinimumRadarSpeed, else set it to the fixed MinimumRadarSpeed
+	if (newRadarSpeed >= MIN_RADAR_SPEED) {
+		radarSpeed = newRadarSpeed;
+	}
+	else {
+		radarSpeed = MIN_RADAR_SPEED;
+	}
 }
 

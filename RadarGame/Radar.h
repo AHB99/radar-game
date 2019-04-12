@@ -23,7 +23,7 @@ public:
 	Radar(RTexture* radTexture);
 	void setAlpha(Uint8 alpha);
 	bool renderToScreen(SDL_Renderer*& destinationRenderer);
-	//
+	
 	void startBlink();
 	//Will cycle through a blink once triggered, and will turn off when complete
 	void updateBlink();
