@@ -79,10 +79,10 @@ void Game::renderRadar(SDL_Renderer*& destinationRenderer) {
 }
 
 void Game::executeRadar() {
-
-	int currentTime = SDL_GetTicks() % radarSpeed;
-	if (((currentTime >= 0) && (currentTime <= 200)) && (!gameRadar.isBlinking())) {
+	Uint32 currentTime = SDL_GetTicks();
+	if (((currentTime-blinkRadarLastTime)>radarSpeed) && (!gameRadar.isBlinking())) {
 		gameRadar.startBlink();
+		blinkRadarLastTime = currentTime;
 	}
 	gameRadar.updateBlink();
 }

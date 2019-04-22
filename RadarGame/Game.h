@@ -61,6 +61,9 @@ private:
 	bool quitGame = false;
 	//Time stamp for last time radar was slowed down
 	Uint32 slowDownRadarLastTime = 0;
+	//Time stamp for last time radar was blinked
+	Uint32 blinkRadarLastTime = 0;
+
 };
 
 #endif
