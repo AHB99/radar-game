@@ -11,6 +11,7 @@
 #include "Enemy.h"
 #include "EnemyBelt.h"
 #include "Radar.h"
+#include "UtilityFunctions.h"
 
 #include "Game.h"
 
@@ -25,6 +26,7 @@ void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::
 
 int main(int argc, char* args[])
 {
+	
 	SDL_Window* mainWindow = nullptr;
 	SDL_Renderer* mainRenderer = nullptr;
 
@@ -79,7 +81,7 @@ int main(int argc, char* args[])
 
 				mainGame.slowDownRadar();
 				mainGame.executeRadar();
-				mainGame.renderRadar(mainRenderer);
+			//	mainGame.renderRadar(mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
 			}
@@ -87,8 +89,9 @@ int main(int argc, char* args[])
 	}
 
 	closeAllSystems(mainWindow,mainRenderer, allSprites);
-
+	
 	return 0;
+	
 }
 
 bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
@@ -136,6 +139,7 @@ bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
 	}
 
 	return initialized;
+
 }
 
 bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer) {

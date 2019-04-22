@@ -7,9 +7,9 @@ Game::Game(RTexture* playerTexture, RTexture* coinTexture, int coinXPos, int coi
 }
 
 void Game::setUpEnemyBelts() {
-	gameEnemyBelts.push_back(EnemyBelt(true, rconfigurations::SCREEN_WIDTH / 3));
-	gameEnemyBelts.push_back(EnemyBelt(true, 2 * (rconfigurations::SCREEN_WIDTH / 3)));
-	gameEnemyBelts.push_back(EnemyBelt(false, (rconfigurations::SCREEN_HEIGHT / 2)));
+	gameEnemyBelts.push_back(EnemyBelt(true, generateUniformIntegerRandomNumberInRange(0, rconfigurations::SCREEN_WIDTH / 2)));
+	gameEnemyBelts.push_back(EnemyBelt(true, generateUniformIntegerRandomNumberInRange(rconfigurations::SCREEN_WIDTH / 2 , rconfigurations::SCREEN_WIDTH)));
+	gameEnemyBelts.push_back(EnemyBelt(false, generateUniformIntegerRandomNumberInRange(0, rconfigurations::SCREEN_HEIGHT)));
 }
 
 void Game::setUpEnemies(std::vector<RTexture>& allSprites) {

@@ -10,6 +10,7 @@
 #include "Coin.h"
 #include "Radar.h"
 #include "rconfigurations.h"
+#include "UtilityFunctions.h"
 
 //Time delay for slowing down the radar
 const int RADAR_SPEED_TIMER = 5000;

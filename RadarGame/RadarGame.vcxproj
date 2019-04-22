@@ -28,6 +28,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Radar.cpp" />
     <ClCompile Include="RTexture.cpp" />
+    <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coin.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="rconfigurations.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RTexture.h" />
+    <ClInclude Include="UtilityFunctions.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{986c5ef5-3283-4bb1-aa34-a9fcd92a9dfe}</ProjectGuid>
