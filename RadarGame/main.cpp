@@ -26,6 +26,8 @@ void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::
 
 int main(int argc, char* args[])
 {
+
+
 	
 	SDL_Window* mainWindow = nullptr;
 	SDL_Renderer* mainRenderer = nullptr;
