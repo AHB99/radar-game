@@ -53,6 +53,7 @@ int main(int argc, char* args[])
 
 			mainGame.setUpEnemyBelts(allSprites);
 			mainGame.setUpEnemies(allSprites);
+			mainGame.randomizeCoinLocation();
 
 			//Game Loop
 			while (!mainGame.isGameOver()) {

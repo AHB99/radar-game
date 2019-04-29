@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "UtilityFunctions.h"
+#include <utility>
 
 Enemy::Enemy(RTexture* enemyTexture, bool verticalOrientation, int xPos, int yPos):
 	GameObject(enemyTexture, xPos, yPos), enemySpeedDelta(VEL_INIT), velocity(VEL_INIT), verticalOrientation(verticalOrientation) { }
@@ -32,16 +33,11 @@ void Enemy::moveToRoam() {
 	}
 }
 
-Enemy::Enemy(RTexture* enemyTexture, EnemyBelt& linkedEnemyBelt) : GameObject(enemyTexture), enemySpeedDelta(VEL_INIT), velocity(VEL_INIT), verticalOrientation(linkedEnemyBelt.getOrientation()) {
+Enemy::Enemy(RTexture* enemyTexture, EnemyBelt& linkedEnemyBelt) : GameObject(enemyTexture), enemySpeedDelta(VEL_INIT), velocity(VEL_INIT), verticalOrientation(linkedEnemyBelt.isVertical()) {
 	//Spawn the enemy on the belt, in a random displacement along it.
-	if (verticalOrientation) {
-		xPos = linkedEnemyBelt.getPosition();
-		yPos = generateUniformIntegerRandomNumberInRange(0, rconfigurations::SCREEN_HEIGHT - enemyTexture->getHeight());
-	}
-	else {
-		xPos = generateUniformIntegerRandomNumberInRange(0, rconfigurations::SCREEN_WIDTH - enemyTexture->getWidth());
-		yPos = linkedEnemyBelt.getPosition();
-	}
+	std::pair<int, int> randomCoords{ linkedEnemyBelt.getRandomCoordinatesOnBelt(enemyTexture->getHeight(), enemyTexture->getWidth()) };
+	xPos = randomCoords.first;
+	yPos = randomCoords.second;
 	//Randomize initial direction
 	if (generateRandomBool()) {
 		velocity *= -1;

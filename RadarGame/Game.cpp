@@ -10,7 +10,6 @@ void Game::setUpEnemyBelts(std::vector<RTexture>& allSprites) {
 	//To avoid clipping the edge of screen/another enemy
 	int radiusOfEnemy = allSprites[rconfigurations::ENEMY_SPRITE].getWidth() / 2;
 
-
 	gameEnemyBelts.push_back(EnemyBelt(true, generateUniformIntegerRandomNumberInRange(radiusOfEnemy, (rconfigurations::SCREEN_WIDTH / 2) - radiusOfEnemy)));
 	gameEnemyBelts.push_back(EnemyBelt(true, generateUniformIntegerRandomNumberInRange((rconfigurations::SCREEN_WIDTH / 2) + radiusOfEnemy, rconfigurations::SCREEN_WIDTH - radiusOfEnemy)));
 	gameEnemyBelts.push_back(EnemyBelt(false, generateUniformIntegerRandomNumberInRange(radiusOfEnemy, rconfigurations::SCREEN_HEIGHT - radiusOfEnemy)));
@@ -42,23 +41,23 @@ void Game::moveAllEnemies() {
 	}
 }
 
+void Game::randomizeCoinLocation() {
+	int chosenEnemyBeltIndex = generateUniformIntegerRandomNumberInRange(0, gameEnemyBelts.size() - 1);
+	std::pair<int, int> randomCoords{ gameEnemyBelts[chosenEnemyBeltIndex].getRandomCoordinatesOnBelt(gameCoin.getHeight(), gameCoin.getWidth()) };
+	gameCoin.moveCoin(randomCoords.first, randomCoords.second);
+}
+
+
 void Game::handleCollisions() {
 	if (isCollidingCircular(gamePlayer, gameCoin)) {
-		//test teleportation for now
-		if (gameCoin.getXPos() == rconfigurations::SCREEN_WIDTH / 2) {
-			gameCoin.moveCoin(rconfigurations::SCREEN_WIDTH / 3, gameCoin.getYPos());
-		}
-		else {
-			gameCoin.moveCoin(rconfigurations::SCREEN_WIDTH / 2, gameCoin.getYPos());
+		randomizeCoinLocation();
 
-		}
 		gamePoints++;
 		//Coin collection speeds up the radar (to a limit)
 		speedUpRadar();
 
 		// DEBUG
 		std::cout << "Points: " << gamePoints << std::endl;
-
 		// END DEBUG
 	}
 	for (auto& enemy : gameEnemies) {

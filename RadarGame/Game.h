@@ -35,6 +35,7 @@ public:
 	void accelerateEnemies(Uint32 currTime);
 	void moveAllEnemies();
 	void handleCollisions();
+	void randomizeCoinLocation();
 	void renderGameObjects(SDL_Renderer*& destinationRenderer);
 	void renderRadar(SDL_Renderer*& destinationRenderer);
 	void executeRadar();
@@ -50,6 +51,7 @@ private:
 	//Private member functions
 	//Increases frequency of radar blinks, till the limit
 	void speedUpRadar();
+
 
 	//Private member variables
 	Player gamePlayer;
