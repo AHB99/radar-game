@@ -28,7 +28,7 @@ class Game {
 public:
 	Game();
 	Game(RTexture* playerTexture, RTexture* coinTexture, int coinXPos, int coinYPos, RTexture* radarTexture);
-	void setUpEnemyBelts();
+	void setUpEnemyBelts(std::vector<RTexture>& allSprites);
 	void setUpEnemies(std::vector<RTexture>& allSprites);
 	void changePlayerVelocityByKeys(SDL_Event& e);
 	void movePlayerUsingVelocity();
@@ -60,6 +60,7 @@ private:
 	int gamePoints = 0;
 	int radarSpeed = MIN_RADAR_SPEED;
 	bool quitGame = false;
+
 	//Time stamp for last time radar was slowed down
 	Uint32 slowDownRadarLastTime = 0;
 	//Time stamp for last time radar was blinked

@@ -6,10 +6,14 @@ Game::Game(RTexture* playerTexture, RTexture* coinTexture, int coinXPos, int coi
 	: gamePlayer(playerTexture), gameCoin(coinTexture, coinXPos, coinYPos), gameRadar(radarTexture) {
 }
 
-void Game::setUpEnemyBelts() {
-	gameEnemyBelts.push_back(EnemyBelt(true, generateUniformIntegerRandomNumberInRange(0, rconfigurations::SCREEN_WIDTH / 2)));
-	gameEnemyBelts.push_back(EnemyBelt(true, generateUniformIntegerRandomNumberInRange(rconfigurations::SCREEN_WIDTH / 2 , rconfigurations::SCREEN_WIDTH)));
-	gameEnemyBelts.push_back(EnemyBelt(false, generateUniformIntegerRandomNumberInRange(0, rconfigurations::SCREEN_HEIGHT)));
+void Game::setUpEnemyBelts(std::vector<RTexture>& allSprites) {
+	//To avoid clipping the edge of screen/another enemy
+	int radiusOfEnemy = allSprites[rconfigurations::ENEMY_SPRITE].getWidth() / 2;
+
+
+	gameEnemyBelts.push_back(EnemyBelt(true, generateUniformIntegerRandomNumberInRange(radiusOfEnemy, (rconfigurations::SCREEN_WIDTH / 2) - radiusOfEnemy)));
+	gameEnemyBelts.push_back(EnemyBelt(true, generateUniformIntegerRandomNumberInRange((rconfigurations::SCREEN_WIDTH / 2) + radiusOfEnemy, rconfigurations::SCREEN_WIDTH - radiusOfEnemy)));
+	gameEnemyBelts.push_back(EnemyBelt(false, generateUniformIntegerRandomNumberInRange(radiusOfEnemy, rconfigurations::SCREEN_HEIGHT - radiusOfEnemy)));
 }
 
 void Game::setUpEnemies(std::vector<RTexture>& allSprites) {

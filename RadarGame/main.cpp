@@ -49,7 +49,7 @@ int main(int argc, char* args[])
 			//Event handler
 			SDL_Event e;
 
-			mainGame.setUpEnemyBelts();
+			mainGame.setUpEnemyBelts(allSprites);
 			mainGame.setUpEnemies(allSprites);
 
 			//Game Loop
@@ -81,7 +81,7 @@ int main(int argc, char* args[])
 
 				mainGame.slowDownRadar();
 				mainGame.executeRadar();
-			//	mainGame.renderRadar(mainRenderer);
+				//mainGame.renderRadar(mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
 			}
