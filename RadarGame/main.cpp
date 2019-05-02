@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -21,25 +22,25 @@ using std::endl;
 
 
 bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
-bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer);
-void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites);
+bool loadSprites(std::vector<RTexture>& allSprites, TTF_Font*& mainFont, SDL_Renderer*& mainRenderer);
+void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites, TTF_Font*& mainFont);
 
 int main(int argc, char* args[])
 {
 
-
-	
 	SDL_Window* mainWindow = nullptr;
 	SDL_Renderer* mainRenderer = nullptr;
 
 	std::vector<RTexture> allSprites(4);
+	TTF_Font* mainFont = nullptr;
+
 	if (!initializeSDL(mainWindow,mainRenderer))
 	{
 		cout << "Initialization failed" << endl;
 	}
 	else
 	{
-		if (!loadSprites(allSprites,mainRenderer))
+		if (!loadSprites(allSprites,mainFont, mainRenderer))
 		{
 			cout << "Error: " << SDL_GetError();
 		}	
@@ -54,6 +55,7 @@ int main(int argc, char* args[])
 			mainGame.setUpEnemyBelts(allSprites);
 			mainGame.setUpEnemies(allSprites);
 			mainGame.randomizeCoinLocation();
+			mainGame.loadScoreTexture(mainFont, mainRenderer);
 
 			//Game Loop
 			while (!mainGame.isGameOver()) {
@@ -74,7 +76,7 @@ int main(int argc, char* args[])
 				mainGame.accelerateEnemies(SDL_GetTicks());
 				mainGame.moveAllEnemies();
 
-				mainGame.handleCollisions();
+				mainGame.handleCollisions(mainFont, mainRenderer);
 				
 				//Clear screen with background color
 				SDL_SetRenderDrawColor(mainRenderer, 0xaa, 0xaa, 0xa0, 0xFF);
@@ -84,14 +86,16 @@ int main(int argc, char* args[])
 
 				mainGame.slowDownRadar();
 				mainGame.executeRadar();
-				//mainGame.renderRadar(mainRenderer);
+				mainGame.renderRadar(mainRenderer);
+
+				mainGame.renderScore(mainRenderer);
 
 				SDL_RenderPresent(mainRenderer);
 			}
 		}
 	}
 
-	closeAllSystems(mainWindow,mainRenderer, allSprites);
+	closeAllSystems(mainWindow,mainRenderer, allSprites, mainFont);
 	
 	return 0;
 	
@@ -137,6 +141,13 @@ bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
 					cout << "SDL_Image initialization failed. Errors:\n" << IMG_GetError() << endl;
 					initialized = false;
 				}
+
+				if (TTF_Init() == -1)
+				{
+					cout << "SDL_ttf could not initialize! " << TTF_GetError() << endl;
+					initialized = false;
+				}
+
 			}
 		}
 	}
@@ -145,7 +156,7 @@ bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
 
 }
 
-bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer) {
+bool loadSprites(std::vector<RTexture>& allSprites, TTF_Font*& mainFont, SDL_Renderer*& mainRenderer) {
 	bool noErrors = false;
 
 	noErrors =  allSprites[rconfigurations::PLAYER_SPRITE].loadImageFromFile(rconfigurations::PLAYER_IMAGE_FILE, mainRenderer);
@@ -153,16 +164,23 @@ bool loadSprites(std::vector<RTexture>& allSprites, SDL_Renderer*& mainRenderer)
 	noErrors = allSprites[rconfigurations::ENEMY_SPRITE].loadImageFromFile(rconfigurations::ENEMY_IMAGE_FILE, mainRenderer);
 	noErrors = allSprites[rconfigurations::RADAR_SPRITE].loadImageFromFile(rconfigurations::RADAR_IMAGE_FILE, mainRenderer);
 
-
+	mainFont = TTF_OpenFont(rconfigurations::FONT_FILE.c_str(), 15);
+	if (mainFont == nullptr)
+	{
+		cout << "Couldn't open font file " << TTF_GetError() << endl;
+		noErrors = false;
+	}
 	return noErrors;
 }
 
 
-void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites) {
+void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites, TTF_Font*& mainFont) {
 
 	for (auto texture : allSprites) {
 		texture.deallocateTexture();
 	}
+	TTF_CloseFont(mainFont);
+	mainFont = nullptr;
 
 	SDL_DestroyRenderer(mainRenderer);
 	SDL_DestroyWindow(mainWindow);
@@ -171,5 +189,6 @@ void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::
 
 	IMG_Quit();
 	SDL_Quit();
+	TTF_Quit();
 }
 

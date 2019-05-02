@@ -34,12 +34,14 @@ public:
 	void movePlayerUsingVelocity();
 	void accelerateEnemies(Uint32 currTime);
 	void moveAllEnemies();
-	void handleCollisions();
+	void handleCollisions(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer);
 	void randomizeCoinLocation();
 	void renderGameObjects(SDL_Renderer*& destinationRenderer);
 	void renderRadar(SDL_Renderer*& destinationRenderer);
+	void renderScore(SDL_Renderer*& destinationRenderer);
 	void executeRadar();
 	void slowDownRadar();
+	void loadScoreTexture(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer);
 	void setGameOver() {
 		quitGame = true;
 	}
@@ -51,6 +53,8 @@ private:
 	//Private member functions
 	//Increases frequency of radar blinks, till the limit
 	void speedUpRadar();
+	void playerCollidedWithCoin(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer);
+	void playerCollidedWithEnemy();
 
 
 	//Private member variables
@@ -59,6 +63,7 @@ private:
 	Radar gameRadar;
 	std::vector<EnemyBelt> gameEnemyBelts;
 	std::vector<Enemy> gameEnemies;
+	RTexture scoreTexture;
 	int gamePoints = 0;
 	int radarSpeed = MIN_RADAR_SPEED;
 	bool quitGame = false;

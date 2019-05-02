@@ -1,6 +1,7 @@
 #include "RTexture.h"
 
 using std::cout;
+using std::endl;
 
 
 void RTexture::deallocateTexture() {
@@ -44,6 +45,36 @@ bool RTexture::loadImageFromFile(std::string fileName, SDL_Renderer*& destinatio
 
 	rTexture = resultTexture;
 	return (rTexture != nullptr);
+}
+
+bool RTexture::loadTextFromFont(SDL_Renderer*& destinationRenderer, std::string writtenText, SDL_Color textColor, TTF_Font* givenFont) {
+		deallocateTexture();
+		SDL_Surface* textSurface = TTF_RenderText_Solid(givenFont, writtenText.c_str(), textColor);
+
+		if (textSurface == NULL)
+		{
+			cout << "Failed to load text: " << TTF_GetError() << endl;
+		}
+		else
+		{
+			rTexture = SDL_CreateTextureFromSurface(destinationRenderer, textSurface);
+			if (rTexture == NULL)
+			{
+				cout << "Failed to load texture for text: " << SDL_GetError() << endl;
+			}
+			else
+			{
+				rWidth = textSurface->w;
+				rHeight = textSurface->h;
+			}
+
+			//Get rid of old surface
+			SDL_FreeSurface(textSurface);
+		}
+
+		//Return success
+		return rTexture != NULL;
+
 }
 
 bool RTexture::renderCurrentTexture(int x, int y, SDL_Renderer*& destinationRenderer) {

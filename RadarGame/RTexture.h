@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <string>
 #include <iostream>
 #include "rconfigurations.h"
@@ -13,6 +14,8 @@ public:
 	~RTexture() { deallocateTexture(); }
 
 	bool loadImageFromFile(std::string fileName, SDL_Renderer*& destinationRenderer);
+	bool loadTextFromFont(SDL_Renderer*& destinationRenderer, std::string writtenText, SDL_Color textColor, TTF_Font* givenFont);
+
 
 	bool renderCurrentTexture(int x, int y, SDL_Renderer*& destinationRenderer);
 	bool renderCurrentTextureToFullScreen(int x, int y, SDL_Renderer*& destinationRenderer);

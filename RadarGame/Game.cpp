@@ -48,25 +48,33 @@ void Game::randomizeCoinLocation() {
 }
 
 
-void Game::handleCollisions() {
+void Game::handleCollisions(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer) {
 	if (isCollidingCircular(gamePlayer, gameCoin)) {
-		randomizeCoinLocation();
-
-		gamePoints++;
-		//Coin collection speeds up the radar (to a limit)
-		speedUpRadar();
-
-		// DEBUG
-		std::cout << "Points: " << gamePoints << std::endl;
-		// END DEBUG
+		playerCollidedWithCoin(mainFont, destinationRenderer);
 	}
 	for (auto& enemy : gameEnemies) {
 		if (isCollidingCircular(gamePlayer, enemy)) {
-			// DEBUG keep quitting off
-			//quitGame = true;
-			std::cout << "Hit" << std::endl;
+			playerCollidedWithEnemy();
 		}
 	}
+}
+
+void Game::playerCollidedWithCoin(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer) {
+	randomizeCoinLocation();
+	gamePoints++;
+	//Update score-text texture, so subsequent renderings will show new score
+	loadScoreTexture(mainFont, destinationRenderer);
+
+	//Coin collection speeds up the radar (to a limit)
+	speedUpRadar();
+
+	// DEBUG
+	std::cout << "Points: " << gamePoints << std::endl;
+	// END DEBUG
+}
+
+void Game::playerCollidedWithEnemy() {
+	std::cout << "Hit" << std::endl;
 }
 
 void Game::renderGameObjects(SDL_Renderer*& destinationRenderer) {
@@ -109,4 +117,14 @@ void Game::speedUpRadar() {
 		radarSpeed = MIN_RADAR_SPEED;
 	}
 }
+
+void Game::loadScoreTexture(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer) {
+	scoreTexture.loadTextFromFont(destinationRenderer, "Score: " + std::to_string(gamePoints), { 0,0,0 }, mainFont);
+}
+
+void Game::renderScore(SDL_Renderer*& destinationRenderer) {
+	scoreTexture.renderCurrentTexture(5, 10, destinationRenderer);
+}
+
+
 
