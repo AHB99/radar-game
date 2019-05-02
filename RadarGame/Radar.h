@@ -14,7 +14,7 @@ enum blinkState {
 
 //Must be so that once starting from 255, will cycle properly.
 const int RADAR_TRANSPARENCY_DELTA = 5;
-const int RADAR_TRANSPARENCY_MIN = 15;
+const int RADAR_TRANSPARENCY_MIN = 0;
 
 
 class Radar {

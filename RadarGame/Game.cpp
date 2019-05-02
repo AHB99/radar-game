@@ -74,6 +74,7 @@ void Game::playerCollidedWithCoin(TTF_Font*& mainFont, SDL_Renderer*& destinatio
 }
 
 void Game::playerCollidedWithEnemy() {
+
 	std::cout << "Hit" << std::endl;
 }
 
