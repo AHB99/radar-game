@@ -20,19 +20,13 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-
-bool initializeSDL(SDL_Window*& mainWindow,SDL_Renderer*& mainRenderer);
-bool loadSprites(std::vector<RTexture>& allSprites, TTF_Font*& mainFont, SDL_Renderer*& mainRenderer);
-void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites, TTF_Font*& mainFont);
-
 int main(int argc, char* args[])
 {
-
 	SDL_Window* mainWindow = nullptr;
 	SDL_Renderer* mainRenderer = nullptr;
-
 	std::vector<RTexture> allSprites(4);
 	TTF_Font* mainFont = nullptr;
+	TTF_Font* gameOverFont = nullptr;
 
 	if (!initializeSDL(mainWindow,mainRenderer))
 	{
@@ -40,7 +34,7 @@ int main(int argc, char* args[])
 	}
 	else
 	{
-		if (!loadSprites(allSprites,mainFont, mainRenderer))
+		if (!loadSprites(allSprites,mainFont, gameOverFont, mainRenderer))
 		{
 			cout << "Error: " << SDL_GetError();
 		}	
@@ -92,103 +86,37 @@ int main(int argc, char* args[])
 
 				SDL_RenderPresent(mainRenderer);
 			}
+
+			//Game Over Phase
+			bool freezeScreen = true;
+			SDL_Event eventForUserQuitting;
+			RTexture gameOverTexture, finalPointsTexture;
+			
+			loadGameOverTexture(gameOverTexture, gameOverFont, mainRenderer);
+			loadFinalPointsTexture(finalPointsTexture, mainFont, mainRenderer, mainGame.getScore());
+
+			//Only display game objects so player can see how they died
+			SDL_SetRenderDrawColor(mainRenderer, 0xaa, 0xaa, 0xa0, 0xFF);
+			SDL_RenderClear(mainRenderer);
+			mainGame.renderGameObjects(mainRenderer);
+			renderGameOverWithPoints(gameOverTexture, finalPointsTexture, mainRenderer);
+			SDL_RenderPresent(mainRenderer);
+
+			while (freezeScreen) {
+				while (SDL_PollEvent(&eventForUserQuitting) != 0) {
+					if (eventForUserQuitting.type == SDL_QUIT) {
+						freezeScreen = false;
+					}
+				}
+			}
+
 		}
 	}
 
-	closeAllSystems(mainWindow,mainRenderer, allSprites, mainFont);
+	closeAllSystems(mainWindow,mainRenderer, allSprites, mainFont, gameOverFont);
 	
 	return 0;
 	
 }
 
-bool initializeSDL(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer)
-{
-	bool initialized = true;
-
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		cout << "SDL initialization failed. Errors:\n" << SDL_GetError << endl;
-		initialized = false;
-	}
-	else
-	{
-		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-		{
-			cout << "Linear texture filtering failed" << endl;
-		}
-
-		mainWindow = SDL_CreateWindow("Radar Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, rconfigurations::SCREEN_WIDTH, rconfigurations::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if (mainWindow == nullptr)
-		{
-			cout << "Window creation failed. Errors:\n" << SDL_GetError << endl;
-			initialized = false;
-		}
-		else
-		{
-			mainRenderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-			if (mainRenderer == nullptr)
-			{
-				cout << "Renderer creation failed. Errors:\n" << SDL_GetError << endl;
-				initialized = false;
-			}
-			else
-			{
-				SDL_SetRenderDrawColor(mainRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-				int imgFlags = IMG_INIT_PNG;
-				if (!(IMG_Init(imgFlags) & imgFlags))
-				{
-					cout << "SDL_Image initialization failed. Errors:\n" << IMG_GetError() << endl;
-					initialized = false;
-				}
-
-				if (TTF_Init() == -1)
-				{
-					cout << "SDL_ttf could not initialize! " << TTF_GetError() << endl;
-					initialized = false;
-				}
-
-			}
-		}
-	}
-
-	return initialized;
-
-}
-
-bool loadSprites(std::vector<RTexture>& allSprites, TTF_Font*& mainFont, SDL_Renderer*& mainRenderer) {
-	bool noErrors = false;
-
-	noErrors =  allSprites[rconfigurations::PLAYER_SPRITE].loadImageFromFile(rconfigurations::PLAYER_IMAGE_FILE, mainRenderer);
-	noErrors = allSprites[rconfigurations::COIN_SPRITE].loadImageFromFile(rconfigurations::COIN_IMAGE_FILE, mainRenderer);
-	noErrors = allSprites[rconfigurations::ENEMY_SPRITE].loadImageFromFile(rconfigurations::ENEMY_IMAGE_FILE, mainRenderer);
-	noErrors = allSprites[rconfigurations::RADAR_SPRITE].loadImageFromFile(rconfigurations::RADAR_IMAGE_FILE, mainRenderer);
-
-	mainFont = TTF_OpenFont(rconfigurations::FONT_FILE.c_str(), 15);
-	if (mainFont == nullptr)
-	{
-		cout << "Couldn't open font file " << TTF_GetError() << endl;
-		noErrors = false;
-	}
-	return noErrors;
-}
-
-
-void closeAllSystems(SDL_Window*& mainWindow, SDL_Renderer*& mainRenderer, std::vector<RTexture>& allSprites, TTF_Font*& mainFont) {
-
-	for (auto texture : allSprites) {
-		texture.deallocateTexture();
-	}
-	TTF_CloseFont(mainFont);
-	mainFont = nullptr;
-
-	SDL_DestroyRenderer(mainRenderer);
-	SDL_DestroyWindow(mainWindow);
-	mainWindow = nullptr;
-	mainRenderer = nullptr;
-
-	IMG_Quit();
-	SDL_Quit();
-	TTF_Quit();
-}
 

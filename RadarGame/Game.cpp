@@ -62,20 +62,16 @@ void Game::handleCollisions(TTF_Font*& mainFont, SDL_Renderer*& destinationRende
 void Game::playerCollidedWithCoin(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer) {
 	randomizeCoinLocation();
 	gamePoints++;
+
 	//Update score-text texture, so subsequent renderings will show new score
 	loadScoreTexture(mainFont, destinationRenderer);
 
 	//Coin collection speeds up the radar (to a limit)
 	speedUpRadar();
-
-	// DEBUG
-	std::cout << "Points: " << gamePoints << std::endl;
-	// END DEBUG
 }
 
 void Game::playerCollidedWithEnemy() {
-
-	std::cout << "Hit" << std::endl;
+	quitGame = true;
 }
 
 void Game::renderGameObjects(SDL_Renderer*& destinationRenderer) {
@@ -120,7 +116,7 @@ void Game::speedUpRadar() {
 }
 
 void Game::loadScoreTexture(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer) {
-	scoreTexture.loadTextFromFont(destinationRenderer, "Score: " + std::to_string(gamePoints), { 0,0,0 }, mainFont);
+	scoreTexture.loadSolidTextFromFont(destinationRenderer, "Score: " + std::to_string(gamePoints), { 0,0,0 }, mainFont);
 }
 
 void Game::renderScore(SDL_Renderer*& destinationRenderer) {

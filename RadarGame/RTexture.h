@@ -14,7 +14,8 @@ public:
 	~RTexture() { deallocateTexture(); }
 
 	bool loadImageFromFile(std::string fileName, SDL_Renderer*& destinationRenderer);
-	bool loadTextFromFont(SDL_Renderer*& destinationRenderer, std::string writtenText, SDL_Color textColor, TTF_Font* givenFont);
+	bool loadSolidTextFromFont(SDL_Renderer*& destinationRenderer, std::string writtenText, SDL_Color textColor, TTF_Font* givenFont);
+	bool loadBlendedTextFromFont(SDL_Renderer*& destinationRenderer, std::string writtenText, SDL_Color textColor, TTF_Font* givenFont);
 
 
 	bool renderCurrentTexture(int x, int y, SDL_Renderer*& destinationRenderer);
@@ -31,6 +32,8 @@ public:
 	int getHeight();
 
 private:
+	//Loading text-textures helper
+	bool loadTextTextureGivenSurface(SDL_Renderer*& destinationRenderer, SDL_Surface* textSurface);
 
 	SDL_Texture* rTexture;
 

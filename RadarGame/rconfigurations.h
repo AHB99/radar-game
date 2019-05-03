@@ -12,6 +12,7 @@ namespace rconfigurations {
 	const std::string ENEMY_IMAGE_FILE = "enemySprite.png";
 	const std::string RADAR_IMAGE_FILE = "radarSprite.png";
 	const std::string FONT_FILE = "SourceCodePro-Regular.otf";
+	const std::string GAME_OVER_FONT_FILE = "Cantarell-Bold.ttf";
 
 
 

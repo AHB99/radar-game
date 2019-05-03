@@ -47,34 +47,43 @@ bool RTexture::loadImageFromFile(std::string fileName, SDL_Renderer*& destinatio
 	return (rTexture != nullptr);
 }
 
-bool RTexture::loadTextFromFont(SDL_Renderer*& destinationRenderer, std::string writtenText, SDL_Color textColor, TTF_Font* givenFont) {
-		deallocateTexture();
-		SDL_Surface* textSurface = TTF_RenderText_Solid(givenFont, writtenText.c_str(), textColor);
+bool RTexture::loadSolidTextFromFont(SDL_Renderer*& destinationRenderer, std::string writtenText, SDL_Color textColor, TTF_Font* givenFont) {
+	deallocateTexture();
+	SDL_Surface* textSurface = TTF_RenderText_Solid(givenFont, writtenText.c_str(), textColor);
+	return loadTextTextureGivenSurface(destinationRenderer, textSurface);
 
-		if (textSurface == NULL)
+}
+
+bool RTexture::loadBlendedTextFromFont(SDL_Renderer*& destinationRenderer, std::string writtenText, SDL_Color textColor, TTF_Font* givenFont) {
+	deallocateTexture();
+	SDL_Surface* textSurface = TTF_RenderText_Blended(givenFont, writtenText.c_str(), textColor);
+	return loadTextTextureGivenSurface(destinationRenderer, textSurface);
+}
+
+
+bool RTexture::loadTextTextureGivenSurface(SDL_Renderer*& destinationRenderer, SDL_Surface* textSurface) {
+	if (textSurface == NULL) {
+		cout << "Failed to load text: " << TTF_GetError() << endl;
+	}
+	else
+	{
+		rTexture = SDL_CreateTextureFromSurface(destinationRenderer, textSurface);
+		if (rTexture == NULL)
 		{
-			cout << "Failed to load text: " << TTF_GetError() << endl;
+			cout << "Failed to load texture for text: " << SDL_GetError() << endl;
 		}
 		else
 		{
-			rTexture = SDL_CreateTextureFromSurface(destinationRenderer, textSurface);
-			if (rTexture == NULL)
-			{
-				cout << "Failed to load texture for text: " << SDL_GetError() << endl;
-			}
-			else
-			{
-				rWidth = textSurface->w;
-				rHeight = textSurface->h;
-			}
-
-			//Get rid of old surface
-			SDL_FreeSurface(textSurface);
+			rWidth = textSurface->w;
+			rHeight = textSurface->h;
 		}
 
-		//Return success
-		return rTexture != NULL;
+		//Get rid of old surface
+		SDL_FreeSurface(textSurface);
+	}
 
+	//Return success
+	return rTexture != NULL;
 }
 
 bool RTexture::renderCurrentTexture(int x, int y, SDL_Renderer*& destinationRenderer) {

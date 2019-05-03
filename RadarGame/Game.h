@@ -42,11 +42,15 @@ public:
 	void executeRadar();
 	void slowDownRadar();
 	void loadScoreTexture(TTF_Font*& mainFont, SDL_Renderer*& destinationRenderer);
+
 	void setGameOver() {
 		quitGame = true;
 	}
 	bool isGameOver() {
 		return quitGame;
+	}
+	int getScore() const {
+		return gamePoints;
 	}
 
 private:
