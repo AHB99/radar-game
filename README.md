@@ -1,8 +1,16 @@
 # Radar
 A 2D Game where only flashes of a radar reveal the player and enemy positions. Developed with C++ and SDL2.
 
+
+<p align="center"> <img width="680" height="553" src=/Screenshots/RadarSC-Main%20shot.PNG></p>
+
+
+
+
 ## Game Overview
 In *Radar*, the player controls their character via arrow-keys to collect as many coins as they can. At the same time, they must dodge the enemies that travel across the board.
+
+<p align="center"> <img width="680" height="553" src=/Screenshots/RadarSC-Dense%20shot.PNG></p>
 
 However, the whole game-screen is obscured by a blue radar, that flashes off periodically. Hence, the player is faced with the challenge of not being able to see the screen most of the time. In order to survive, the player must familiarize themself with the rhythm of the radar, the enemies, and their very own character.
 
@@ -12,6 +20,9 @@ A deep blue surface is applied to the game-screen, and during a radar flash, thi
 As time progresses, the frequency of the flashes decreases, challenging the player further. However, collecting coins not only scores points, but also increases the frequency of the radar as a reward.
 The code is designed to ensure the radar frequency will not reach unplayable levels, in either direction.
 
+<p align="center"> <img width="680" height="553" src=/Screenshots/RadarSC-Clear%20shot.PNG></p>
+
+
 #### Random Game Generation
 Every round is unique as all game elements are randomly spawned upon loading the game. Enemies traverse different paths, move in different directions, and collecting the coin causes it to jump randomly across the board.
 The code is designed to ensure the random spawning will not cause unplayable or glitched game rounds.
@@ -20,6 +31,8 @@ The code is designed to ensure the random spawning will not cause unplayable or 
 #### Enemy Behaviour
 Once spawned, enemies traverse the game-board along fixed paths. As time progresses, the speed of the enemies gradually increases, raising the game's difficulty. Unlike the radar's frequency, collecting coins does not reduce this.
 Furthermore, coins are deliberately programmed to randomly spawn only on the same paths as the enemies, forcing the player to have to risk crossing an enemy's path.
+
+<p align="center"> <img width="680" height="553" src=/Screenshots/RadarSC-Game%20Over.PNG></p>
 
 
 ## Language and Libraries
