@@ -27,7 +27,7 @@ int main(int argc, char* args[])
 	std::vector<RTexture> allSprites(4);
 	TTF_Font* mainFont = nullptr;
 	TTF_Font* gameOverFont = nullptr;
-
+	
 	if (!initializeSDL(mainWindow,mainRenderer))
 	{
 		cout << "Initialization failed" << endl;
@@ -50,15 +50,15 @@ int main(int argc, char* args[])
 			mainGame.setUpEnemies(allSprites);
 			mainGame.randomizeCoinLocation();
 			mainGame.loadScoreTexture(mainFont, mainRenderer);
-
+			bool exitWindow = false;
 			//Game Loop
-			while (!mainGame.isGameOver()) {
+			while (!mainGame.isGameOver()&&!exitWindow) {
 				//Event queue
 				while (SDL_PollEvent(&e) != 0)
 				{
 					if (e.type == SDL_QUIT)
 					{
-						mainGame.setGameOver();
+						exitWindow = true;
 					}	
 
 					//Player key motions
@@ -102,7 +102,7 @@ int main(int argc, char* args[])
 			renderGameOverWithPoints(gameOverTexture, finalPointsTexture, mainRenderer);
 			SDL_RenderPresent(mainRenderer);
 
-			while (freezeScreen) {
+			while (freezeScreen&&!exitWindow) {
 				while (SDL_PollEvent(&eventForUserQuitting) != 0) {
 					if (eventForUserQuitting.type == SDL_QUIT) {
 						freezeScreen = false;
